@@ -1,10 +1,10 @@
-# Exercice — Cache Redis pour les tâches (fastapi-redis-cache)
+# Exercice — Cache Redis pour les tâches (fastapi-cache2[redis])
 
 ## Objectif
 Mettre en place un cache Redis pour les endpoints de récupération des tâches afin d'améliorer les performances. Le cache doit être utilisé à la première récupération et être invalidé à chaque modification pertinente de la base de données.
 
 ## Contraintes
-- Utiliser `fastapi-redis-cache` (ou une solution équivalente compatible FastAPI).
+- Utiliser `fastapi-cache2[redis]` (ou une solution équivalente compatible FastAPI).
 - Cibler au minimum les endpoints de lecture : `GET /tasks` et `GET /tasks/{id}`.
 - Le cache doit être invalidé lors des opérations suivantes :
 	- Création, modification ou suppression d'une `task`.
@@ -12,7 +12,7 @@ Mettre en place un cache Redis pour les endpoints de récupération des tâches 
 - TTL (durée de vie) du cache configurable (par défaut suggéré : 300 secondes).
 
 ## Tâches à réaliser
-1. Installer et configurer Redis et `fastapi-redis-cache` dans l'application.
+1. Installer et configurer Redis et `fastapi-cache2[redis]` dans l'application.
 2. Initialiser la connexion Redis au démarrage de l'app.
 3. Ajouter la mise en cache pour `GET /tasks` et `GET /tasks/{id}`.
 4. Implémenter l'invalidation du cache sur les routes `POST`, `PUT`, `DELETE` liées à `task` et sur les changements d'`employee` pertinents.

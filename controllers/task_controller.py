@@ -10,9 +10,12 @@ from fastapi import (
     Path,
     Query,
 )
+from fastapi_cache import FastAPICache
+from fastapi_cache.decorator import cache
 from sqlalchemy.exc import NoResultFound
 from starlette.status import *
 
+from decorators.invalidate_cache_decorator import invalidate_cache
 from dto.task_filter_request_dto import TaskFilterRequestDto
 from dto.task_request_dto import TaskRequestDto
 from dto.task_response_dto import TaskResponseDto
@@ -25,6 +28,7 @@ from services.mailer import Mailer
 router = APIRouter(prefix='/tasks', tags=['Tasks'])
 
 @router.post('/', status_code=201)
+@invalidate_cache(namespace='TASKS')
 async def create(
     background_tasks: BackgroundTasks,
     dto: Annotated[TaskRequestDto, Body()],
@@ -58,9 +62,11 @@ async def create(
         task.__dict__,
         'new_task.html'
     )
+
     return task.id
 
 @router.get('/')
+@cache(expire=300, namespace='TASKS')
 def get(
     dto: Annotated[TaskFilterRequestDto, Query()],
     task_repository: Annotated[TaskRepository, Depends(TaskRepository)]
@@ -72,6 +78,7 @@ def get(
     return list(map(TaskResponseDto.from_entity, tasks))
 
 @router.patch('/{id}')
+@invalidate_cache(namespace='TASKS')
 def update_status(
     id: Annotated[int, Path()], 
     status: Annotated[Task.Status, Body(...)],
@@ -91,6 +98,7 @@ def update_status(
     return task.id
 
 @router.delete('/{id}')
+@invalidate_cache(namespace='TASKS')
 def delete(
     background_tasks: BackgroundTasks,
     id: Annotated[int, Path()], 

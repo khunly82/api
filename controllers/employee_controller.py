@@ -1,11 +1,13 @@
 import uuid
 from typing import Annotated
 
+from fastapi_cache import FastAPICache
 import starlette.status
 from fastapi import APIRouter, Body, Depends, File, HTTPException, Path, UploadFile
 from PIL import Image
 from sqlalchemy.exc import NoResultFound
 
+from decorators.invalidate_cache_decorator import invalidate_cache
 from dto.employee_request_dto import EmployeeRequestDto
 from models.employee import Employee
 from repositories.employee_repository import EmployeeRepository
@@ -47,6 +49,7 @@ async def update_photo(
     return e  
 
 @router.delete('/{id}')
+@invalidate_cache(namespace='TASKS')
 def delete(
     id: Annotated[int, Path()],
     employee_repository: Annotated[EmployeeRepository, Depends(EmployeeRepository)],
@@ -60,6 +63,7 @@ def delete(
     employee.supervisor.tasks.extend(employee.tasks)
     employee.supervisor.subordinates.extend(employee.subordinates)
     employee_repository.flush()
+
     return employee.id
 
 @router.patch('/{id}/supervisor')

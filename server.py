@@ -1,11 +1,26 @@
+import os
+from contextlib import asynccontextmanager
+
 import uvicorn
+from dotenv import load_dotenv
 from fastapi import FastAPI, staticfiles
+from fastapi_cache import FastAPICache
+from fastapi_cache.backends.redis import RedisBackend
+from redis import asyncio as aioredis
 
 import controllers
 from utils.application_utils import load_routers
 
+load_dotenv()
+
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    redis = aioredis.from_url(os.getenv('REDIS_HOST'))
+    FastAPICache.init(RedisBackend(redis), prefix="fastapi-cache")
+    yield
+
 # créer une instance de FastAPI
-app = FastAPI()
+app = FastAPI(lifespan=lifespan)
 
 app.mount('/public', staticfiles.StaticFiles(directory='static'))
 
