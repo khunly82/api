@@ -37,9 +37,3 @@ Mettre en place un cache Redis pour les endpoints de récupération des tâches 
 3. Appeler `GET /tasks` à nouveau → réponse servie depuis le cache (latence réduite).
 4. Créer/modifier/supprimer une tâche.
 5. Appeler `GET /tasks` → nouvelle réponse reflétant la modification.
-
----
-
-Si tu veux, je peux :
-- implémenter la configuration et les décorateurs dans le projet, ou
-- proposer un extrait de code concret pour l'initialisation et l'invalidation.
