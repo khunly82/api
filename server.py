@@ -9,6 +9,7 @@ from fastapi_cache.backends.redis import RedisBackend
 from redis import asyncio as aioredis
 
 import controllers
+from middlewares.random_middleware import RandomMiddleware
 from utils.application_utils import load_routers
 
 load_dotenv()
@@ -23,6 +24,8 @@ async def lifespan(_: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 app.mount('/public', staticfiles.StaticFiles(directory='static'))
+
+app.add_middleware(RandomMiddleware)
 
 # charger tous les router se trouvant dans controllers
 load_routers(app, controllers)
