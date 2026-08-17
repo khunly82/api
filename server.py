@@ -15,8 +15,9 @@ from utils.application_utils import load_routers
 load_dotenv()
 
 @asynccontextmanager
-async def lifespan(_: FastAPI):
+async def lifespan(app: FastAPI):
     redis = aioredis.from_url(os.getenv('REDIS_HOST'))
+    app.state.redis = redis
     FastAPICache.init(RedisBackend(redis), prefix="fastapi-cache")
     yield
 
