@@ -50,6 +50,10 @@ async def create(
 
     task_repository.add(task)
 
+    print('----------------------------------------')
+    print(task.__dict__)
+    print('----------------------------------------')
+
     result: list[Employee] = employee_repository.get_hierarchy(empl.id)
 
     emails = [e.email for e in result]
@@ -63,7 +67,7 @@ async def create(
         'new_task.html'
     )
 
-    return task.id
+    return { 'id':  task.id }
 
 @router.get('/')
 @cache(expire=300, namespace='TASKS')
