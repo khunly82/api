@@ -20,7 +20,9 @@ def create(
     employee_repository: Annotated[EmployeeRepository, Depends(EmployeeRepository)]
 ):
     try:
-        sup = employee_repository.get_one(dto.supervisor_id)
+        sup = None
+        if dto.supervisor_id:
+            sup = employee_repository.get_one(dto.supervisor_id)
     except NoResultFound:
         raise HTTPException(starlette.status.HTTP_422_UNPROCESSABLE_CONTENT)
     if sup.title == Employee.Title.DEV and dto.title == Employee.Title.PM:
