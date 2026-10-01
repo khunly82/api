@@ -25,7 +25,7 @@ def create(
             sup = employee_repository.get_one(dto.supervisor_id)
     except NoResultFound:
         raise HTTPException(starlette.status.HTTP_422_UNPROCESSABLE_CONTENT)
-    if sup.title == Employee.Title.DEV and dto.title == Employee.Title.PM:
+    if sup and sup.title == Employee.Title.DEV and dto.title == Employee.Title.PM:
         raise HTTPException(starlette.status.HTTP_422_UNPROCESSABLE_CONTENT)
     e = employee_repository.add(Employee(
         **dto.__dict__
