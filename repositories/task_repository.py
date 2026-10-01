@@ -17,7 +17,7 @@ class TaskRepository(RepositoryBase[Task]):
             .limit(limit)
         )
         if email:
-            stmt.where(Task.assign_to.email == email)
+            stmt.join(Task.assign_to).where(Task.assign_to.email == email)
         if status:
             stmt.where(Task.status == status)
 
